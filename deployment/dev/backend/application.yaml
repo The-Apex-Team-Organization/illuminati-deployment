@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: backend-dev
+  namespace: illuminati
+spec:
+  project: illuminati
+
+  sources:
+    - repoURL: https://github.com/The-Apex-Team-Organization/illuminati-helm-charts
+      targetRevision: main
+      path: backend
+      helm:
+        valueFiles:
+          - $values/vars/dev/backend/values.yaml
+
+    - repoURL: https://github.com/The-Apex-Team-Organization/illuminati-deployment.git
+      targetRevision: main
+      ref: values
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: illuminati
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
